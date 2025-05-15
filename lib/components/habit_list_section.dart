@@ -11,34 +11,41 @@ class HabitListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final habitDatabase = context.watch<HabitDatabase>();
-    final currentHabits = habitDatabase.currentHabits;
+    return Consumer<HabitDatabase>(
+      builder: (context, habitDatabase, child) {
+        final currentHabits = habitDatabase.currentHabits;
 
-    return ListView.builder(
-      itemCount: currentHabits.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemBuilder: (context, index) {
-        final habit = currentHabits[index];
-        final isCompleted = isHabitCompletedToday(habit.completedDays);
+        return ListView.builder(
+          itemCount: currentHabits.length,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemBuilder: (context, index) {
+            final habit = currentHabits[index];
+            final isCompleted = isHabitCompletedToday(habit.completedDays);
 
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 6.0),
-          child: MyHabitTile(
-            text: habit.name,
-            isCompleted: isCompleted,
-            onChanged: (value) {
-              if (value != null) {
-                // ✅ use habit.key instead of habit.id
-                context.read<HabitDatabase>().updateHabitCompletion(
-                  habit.key,
-                  value,
-                );
-              }
-            },
-            onEdit: (ctx) => showEditHabitDialog(ctx, habit),
-            onDelete: (ctx) => showDeleteHabitDialog(ctx, habit),
-          ),
+            return Container(
+              key: ValueKey(habit.key),
+              margin: const EdgeInsets.symmetric(
+                vertical: 2.0,
+                horizontal: 6.0,
+              ),
+              child: MyHabitTile(
+                key: ValueKey(habit.key),  // key is optional now but good to pass
+                text: habit.name,
+                isCompleted: isCompleted,
+                onChanged: (value) {
+                  if (value != null) {
+                    Provider.of<HabitDatabase>(
+                      context,
+                      listen: false,
+                    ).updateHabitCompletion(habit.key, value);
+                  }
+                },
+                onEdit: (ctx) => showEditHabitDialog(ctx, habit),
+                onDelete: (ctx) => showDeleteHabitDialog(ctx, habit),
+              ),
+            );
+          },
         );
       },
     );

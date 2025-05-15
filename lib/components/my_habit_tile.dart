@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class MyHabitTile extends StatelessWidget {
+class MyHabitTile extends StatefulWidget {
   final String text;
   final bool isCompleted;
   final void Function(bool?)? onChanged;
@@ -9,13 +9,44 @@ class MyHabitTile extends StatelessWidget {
   final void Function(BuildContext)? onDelete;
 
   const MyHabitTile({
-    super.key,
+    required Key key,
     required this.text,
     required this.isCompleted,
     required this.onChanged,
     required this.onEdit,
     required this.onDelete,
-  });
+  }) : super(key: key);
+
+  @override
+  State<MyHabitTile> createState() => _MyHabitTileState();
+}
+
+class _MyHabitTileState extends State<MyHabitTile> {
+  late bool _localCompleted;
+
+  @override
+  void initState() {
+    super.initState();
+    _localCompleted = widget.isCompleted;
+  }
+
+  @override
+  void didUpdateWidget(covariant MyHabitTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Keep local state in sync when external state changes
+    if (oldWidget.isCompleted != widget.isCompleted) {
+      _localCompleted = widget.isCompleted;
+    }
+  }
+
+  void _toggleCheckbox(bool? value) {
+    if (value != null) {
+      setState(() {
+        _localCompleted = value;
+      });
+      widget.onChanged?.call(value);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +57,14 @@ class MyHabitTile extends StatelessWidget {
           motion: const StretchMotion(),
           children: [
             SlidableAction(
-              onPressed: onEdit,
+              onPressed: widget.onEdit,
               backgroundColor: Theme.of(context).colorScheme.primary,
               icon: Icons.edit,
               label: 'Edit',
               borderRadius: BorderRadius.circular(8),
             ),
             SlidableAction(
-              onPressed: onDelete,
+              onPressed: widget.onDelete,
               backgroundColor: Colors.red,
               icon: Icons.delete,
               label: 'Delete',
@@ -42,30 +73,28 @@ class MyHabitTile extends StatelessWidget {
           ],
         ),
         child: GestureDetector(
-          onTap: () => onChanged?.call(!isCompleted),
-          // hbabit tile
+          onTap: () => _toggleCheckbox(!_localCompleted),
           child: Container(
             decoration: BoxDecoration(
-              color:
-                  isCompleted
-                      ? Colors.green
-                      : Theme.of(context).colorScheme.tertiary,
+              color: _localCompleted
+                  ? Colors.green
+                  : Theme.of(context).colorScheme.tertiary,
               borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.all(15),
             child: ListTile(
               title: Text(
-                text,
+                widget.text,
                 style: TextStyle(
-                  color:isCompleted
-                          ? Colors.white
-                          : Theme.of(context).colorScheme.inversePrimary,
+                  color: _localCompleted
+                      ? Colors.white
+                      : Theme.of(context).colorScheme.inversePrimary,
                 ),
               ),
               leading: Checkbox(
                 activeColor: Colors.green,
-                value: isCompleted,
-                onChanged: onChanged,
+                value: _localCompleted,
+                onChanged: _toggleCheckbox,
               ),
             ),
           ),

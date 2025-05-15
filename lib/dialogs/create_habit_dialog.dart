@@ -28,6 +28,19 @@ void showCreateHabitDialog(BuildContext context, TextEditingController controlle
         ),
         actionsPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         actions: [
+          // Cancel button comes first now
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: theme.colorScheme.onSurfaceVariant,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              controller.clear();
+            },
+            child: const Text('Cancel'),
+          ),
+          // Save button comes second now
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: theme.colorScheme.primary,
@@ -44,17 +57,6 @@ void showCreateHabitDialog(BuildContext context, TextEditingController controlle
               controller.clear();
             },
             child: const Text('Save', style: TextStyle(color: Colors.white)),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              foregroundColor: theme.colorScheme.onSurfaceVariant,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              controller.clear();
-            },
-            child: const Text('Cancel'),
           ),
         ],
       );

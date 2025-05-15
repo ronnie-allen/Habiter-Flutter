@@ -75,7 +75,7 @@ class _HomePageState extends State<HomePage> {
         child: const Icon(Icons.add),
       ),
 
-      body: ListView(children: const [HeatMapSection(), HabitListSection()]),
+      body: ListView(children: [HeatMapSection(), HabitListSection()]),
     );
   }
 }
