@@ -11,18 +11,24 @@ class HeatMapSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final habitDatabase = context.watch<HabitDatabase>();
-    List<Habit> currentHabits = habitDatabase.currentHabits;
+    final List<Habit> currentHabits = habitDatabase.currentHabits;
 
     return FutureBuilder<DateTime?>(
-      future: habitDatabase.getFirstLaunchDate(),
+      future: habitDatabase.getFirstLaunchDate(), // Now defined in Hive version
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (snapshot.hasData && snapshot.data != null) {
           return MyHeatMap(
             startDate: snapshot.data!,
             datasets: prepareHeatMapData(currentHabits),
           );
         } else {
-          return Container();
+          return const Center(
+            child: Text('No heatmap data available'),
+          );
         }
       },
     );

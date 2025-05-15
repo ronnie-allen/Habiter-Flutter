@@ -66,10 +66,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHabit,
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
         foregroundColor:
             Theme.of(
               context,

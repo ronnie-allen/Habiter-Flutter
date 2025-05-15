@@ -27,7 +27,7 @@ class MyHabitTile extends StatelessWidget {
           children: [
             SlidableAction(
               onPressed: onEdit,
-              backgroundColor: Colors.grey.shade800,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               icon: Icons.edit,
               label: 'Edit',
               borderRadius: BorderRadius.circular(8),

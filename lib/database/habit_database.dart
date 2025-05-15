@@ -1,106 +1,80 @@
-import 'package:flutter/cupertino.dart';
-import 'package:habiter/models/app_settings.dart';
+import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:habiter/models/habit.dart';
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart'; // <-- needed for getApplicationDocumentsDirectory
 
 class HabitDatabase extends ChangeNotifier {
-  static late Isar isar;
+  static late Box<Habit> _habitBox;
+  static const String settingsBoxName = 'appSettings';
 
-  // INIT DB
-  static Future<void> initialize() async {
-    final dir = await getApplicationDocumentsDirectory();
-    isar = await Isar.open([
-      HabitSchema,
-      AppSettingsSchema,
-    ], directory: dir.path);
-  }
-
-  // Save first date
+  // Save first launch date
   Future<void> saveFirstLaunchDate(DateTime date) async {
-    final existingSettings = await isar.appSettings.where().findFirst();
-    if (existingSettings == null) {
-      final settings = AppSettings()..firstLaunchDate = date;
-      await isar.writeTxn(() => isar.appSettings.put(settings));
+    final box = await Hive.openBox(settingsBoxName);
+    // Save only if not already saved
+    if (!box.containsKey('firstLaunchDate')) {
+      await box.put('firstLaunchDate', date);
     }
   }
 
-  // Get first date
+  // Get first launch date
   Future<DateTime?> getFirstLaunchDate() async {
-    final settings = await isar.appSettings.where().findFirst();
-    return settings?.firstLaunchDate;
+    final box = await Hive.openBox(settingsBoxName);
+    return box.get('firstLaunchDate');
   }
 
-  // List of habits
   List<Habit> currentHabits = [];
 
-  // CRUD methods can go here
-  // Create
-  Future<void> addHabit(String habitName) async {
-    // create new habit
-    final newHabit = Habit()..name = habitName;
-    // save to database
-    await isar.writeTxn(() => isar.habits.put(newHabit));
+  static Future<void> initialize() async {
+    await Hive.initFlutter();
+    Hive.registerAdapter(HabitAdapter());
 
-    // read from db
+    _habitBox = await Hive.openBox<Habit>('habits');
+  }
+
+  Future<void> addHabit(String habitName) async {
+    final newHabit = Habit(name: habitName);
+    await _habitBox.add(newHabit);
     readHabits();
   }
 
-  // Read
   Future<void> readHabits() async {
-    // fetch all habits
-    List<Habit> fetchedHabits = await isar.habits.where().findAll();
-    // give to current habits
-    currentHabits.clear();
-    currentHabits.addAll(fetchedHabits);
-
-    // update UI
+    currentHabits = _habitBox.values.toList();
     notifyListeners();
   }
 
-  // Update
-  Future<void> updateHabitCompletion(int id, bool isCompleted) async {
-    // fetch habit
-    final habit = await isar.habits.get(id);
-
+  Future<void> updateHabitCompletion(dynamic key, bool isCompleted) async {
+    final habit = _habitBox.get(key);
     if (habit != null) {
-      // update completion status
-      if (isCompleted && !habit.completedDays.contains(DateTime.now())) {
-        final today = DateTime.now();
+      final today = DateTime.now();
+      final normalizedToday = DateTime(today.year, today.month, today.day);
 
-        habit.completedDays.add(DateTime(today.year, today.month, today.day));
+      if (isCompleted && !habit.completedDays.contains(normalizedToday)) {
+        habit.completedDays.add(normalizedToday);
       } else {
         habit.completedDays.removeWhere(
           (date) =>
-              date.year == DateTime.now().year &&
-              date.month == DateTime.now().month &&
-              date.day == DateTime.now().day,
+              date.year == normalizedToday.year &&
+              date.month == normalizedToday.month &&
+              date.day == normalizedToday.day,
         );
       }
-      // save to database
-      await isar.writeTxn(() => isar.habits.put(habit));
+      await habit.save();
+      readHabits();
     }
   }
 
-  // UPDATE edit habit name
-  Future<void> updateHabitName(int id, String newName) async {
-    // fetch habit
-    final habit = await isar.habits.get(id);
-
+  Future<void> updateHabitName(int index, String newName) async {
+    final habit = _habitBox.getAt(index);
     if (habit != null) {
-      // update name
       habit.name = newName;
-      // save to database
-      await isar.writeTxn(() => isar.habits.put(habit));
+      await habit.save();
+      readHabits();
     }
-    // re-read from db
-    readHabits();
   }
 
-  // Delete
-  Future<void> deleteHabit(int id) async {
-    await isar.writeTxn(() async {
-      await isar.habits.delete(id);
-    });
+  Future<void> deleteHabit(int index) async {
+    if (index >= 0 && index < _habitBox.length) {
+      await _habitBox.deleteAt(index);
+      readHabits();
+    }
   }
 }

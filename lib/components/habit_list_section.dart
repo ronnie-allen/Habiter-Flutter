@@ -5,14 +5,12 @@ import 'package:habiter/components/my_habit_tile.dart';
 import 'package:habiter/utils/habit_utils.dart';
 import 'package:habiter/dialogs/edit_habit_dialog.dart';
 import 'package:habiter/dialogs/delete_habit_dialog.dart';
-import 'package:habiter/theme/theme_provider.dart'; // keep only this import for ThemeProvider
 
 class HabitListSection extends StatelessWidget {
   const HabitListSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = context.watch<ThemeProvider>();
     final habitDatabase = context.watch<HabitDatabase>();
     final currentHabits = habitDatabase.currentHabits;
 
@@ -26,14 +24,14 @@ class HabitListSection extends StatelessWidget {
 
         return Container(
           margin: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 6.0),
-
           child: MyHabitTile(
             text: habit.name,
             isCompleted: isCompleted,
             onChanged: (value) {
               if (value != null) {
+                // ✅ use habit.key instead of habit.id
                 context.read<HabitDatabase>().updateHabitCompletion(
-                  habit.id,
+                  habit.key,
                   value,
                 );
               }

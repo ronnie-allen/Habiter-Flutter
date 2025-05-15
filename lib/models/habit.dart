@@ -1,18 +1,17 @@
-import 'package:isar/isar.dart';
+import 'package:hive/hive.dart';
 
-// run cmd: dart run build_runner build
 part 'habit.g.dart';
 
-@Collection()
-class Habit {
-  // id
-  Id id = Isar.autoIncrement;
+@HiveType(typeId: 0)
+class Habit extends HiveObject {
+  @HiveField(0)
+  String name;
 
-  // name
-  late String name;
+  @HiveField(1)
+  List<DateTime> completedDays;
 
-  // completed days
-  List<DateTime> completedDays = [
-
-  ]; 
+  Habit({
+    required this.name,
+    List<DateTime>? completedDays,
+  }) : completedDays = completedDays ?? [];
 }
