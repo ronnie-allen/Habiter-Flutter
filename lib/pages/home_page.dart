@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:habiter/components/my_habit_tile.dart';
+import 'package:habiter/components/my_heat_map.dart';
 import 'package:provider/provider.dart';
 import 'package:habiter/components/my_drawer.dart';
 import 'package:habiter/database/habit_database.dart';
@@ -147,8 +148,36 @@ void deleteHabit(BuildContext context, Habit habit) {
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         child: const Icon(Icons.add),
       ),
-      body: _buildHabitList(),
+      body: ListView(
+        children: [
+          // H E A T M A P
+          _buildHeatMap(),
+          // H A B I T L I S T 
+          _buildHabitList()
+        ],
+      ),
     );
+  }
+Widget _buildHeatMap() {
+  // habit db
+    final habitDatabase = context.watch<HabitDatabase>();
+    // current habits
+    List<Habit> currentHabits = habitDatabase.currentHabits;
+    
+    return FutureBuilder<DateTime?>(
+      future: habitDatabase.getFirstLaunchDate(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return MyHeatMap(
+            startDate: snapshot.data!,
+            datasets: prepareHeatMapData(currentHabits),
+          );
+        } else {
+          return Container();
+        }
+      },
+    );
+    
   }
 
   Widget _buildHabitList() {
@@ -157,6 +186,8 @@ void deleteHabit(BuildContext context, Habit habit) {
 
     return ListView.builder(
       itemCount: currentHabits.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         final habit = currentHabits[index];
         bool isCompleted = isHabitCompletedToday(habit.completedDays);
