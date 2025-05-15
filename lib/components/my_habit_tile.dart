@@ -49,7 +49,7 @@ class MyHabitTile extends StatelessWidget {
               color:
                   isCompleted
                       ? Colors.green
-                      : Theme.of(context).colorScheme.secondary,
+                      : Theme.of(context).colorScheme.tertiary,
               borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.all(15),
