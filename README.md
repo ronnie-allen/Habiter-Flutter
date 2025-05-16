@@ -117,7 +117,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Have suggestions or feedback?\
 📧 Email: ronnieallen2005@gmail.com\
-📱 LinkedIn: [linkedin.com/in/ronnie-a-jeffrey](https://linkedin.com/in/ronnie-a-jeffrey)
+📱 LinkedIn: [linkedin.com/in/ronnie-a-jeffrey](https://linkedin.com/in/ronnie-a-jeffrey-0901b22bb)
 
 * * * * *
 
