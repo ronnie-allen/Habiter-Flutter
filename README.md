@@ -3,7 +3,7 @@
 > *Track. Transform. Thrive.*
 > A minimalist, efficient Flutter app to build better habits every day.
 
-![Habiter Banner](https://your-image-url.com/banner.png) <!-- Optional: Replace with your banner image -->
+![Habiter Banner](./assets/H%20A%20B%20I%20T%20E%20R.png) <!-- Optional: Replace with your banner image -->
 
 ---
 
@@ -29,12 +29,16 @@
 
 ---
 
-## 📸 Screenshots
+# Screenshots from the App
 
-<!-- Add your screenshots below -->
-| Home Screen | Heatmap | Create Habit |
-|------------|----------|---------------|
-| ![](screenshots/home.png) | ![](screenshots/heatmap.png) | ![](screenshots/create.png) |
+**Home Screen (Light Mode)**  
+<img src="assets/light_mode.png" alt="Light Mode" width="300" height="600"/>
+
+**Dark Mode**  
+<img src="assets/dark_mode.png" alt="Dark Mode" width="300" height="600"/>
+
+**Edit/Delete Habit**  
+<img src="assets/edit_delete.png" alt="Edit/Delete" width="300" height="600"/>
 
 ---
 
@@ -57,7 +61,7 @@
 ### 🛠️ Run Locally
 
 ```bash
-git clone https://github.com/your-username/habiter.git
+git clone https://github.com/ronnie-allen/Habiter-Flutter.git
 cd habiter
 flutter pub get
 flutter run
@@ -94,7 +98,8 @@ Feel free to fork and submit PRs.
 📜 License
 ----------
 
-**MIT License** -- Do whatever you want with it. Credit appreciated but not required.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
 
 * * * * *
 
@@ -111,8 +116,8 @@ Feel free to fork and submit PRs.
 ----------
 
 Have suggestions or feedback?\
-📧 Email: [<your-email@example.com>]\
-📱 LinkedIn: [linkedin.com/in/yourprofile](https://linkedin.com/in/yourprofile)
+📧 Email: ronnieallen2005@gmail.com\
+📱 LinkedIn: [linkedin.com/in/ronnie-a-jeffrey](https://linkedin.com/in/ronnie-a-jeffrey)
 
 * * * * *
 
