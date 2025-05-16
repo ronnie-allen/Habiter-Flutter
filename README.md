@@ -111,6 +111,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 -   Thanks to the Flutter & Hive communities ❤️
 
 * * * * *
+## 📦 Download & Explore
+
+You can download the latest APK and explore the application from the [Releases](https://github.com/ronnie-allen/Habiter-Flutter/releases) section.
+
+👉 [Click here to go to Download](https://github.com/ronnie-allen/Habiter-Flutter/releases)
+
+Once downloaded, install the APK on your Android device and start tracking your habits with ease!
+
 
 📬 Contact
 ----------
